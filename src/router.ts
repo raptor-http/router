@@ -1,7 +1,11 @@
 import type Route from "./route.ts";
 import ParamParser from "./param-parser.ts";
 
-import { NotFound, type Context, type Middleware } from "jsr:@raptor/framework@0.2.0";
+import {
+  type Context,
+  type Middleware,
+  NotFound,
+} from "jsr:@raptor/framework@0.2.0";
 
 /**
  * The application router.

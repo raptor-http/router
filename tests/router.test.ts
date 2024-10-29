@@ -4,11 +4,7 @@ import {
   assertRejects,
 } from "jsr:@std/assert";
 
-import {
-  Request,
-  Response,
-  type Context,
-} from "jsr:@raptor/framework@0.2.0";
+import { type Context, Request, Response } from "jsr:@raptor/framework@0.2.0";
 
 import { Route, Router } from "../mod.ts";
 
