@@ -1,0 +1,23 @@
+{
+  "name": "@raptor/router",
+  "version": "0.1.0",
+  "exports": "./mod.ts",
+  "publish": {
+    "exclude": [
+      ".github",
+      "examples",
+      "docs",
+      "**/*.test.ts"
+    ]
+  },
+  "tasks": {
+    "test": "deno test --coverage=coverage-report --allow-all --parallel",
+    "test-coverage": "deno coverage coverage-report"
+  },
+  "fmt": {
+    "exclude": [
+      "README.md"
+    ]
+  },
+  "lock": false
+}
