@@ -10,6 +10,9 @@
       "**/*.test.ts"
     ]
   },
+  "imports": {
+    "@raptor/framework": "../raptor/mod.ts"
+  },
   "tasks": {
     "test": "deno test --coverage=coverage-report --allow-all --parallel",
     "test-coverage": "deno coverage coverage-report"

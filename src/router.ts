@@ -1,16 +1,16 @@
+import { ServiceProvider } from "@raptor/framework";
+import { container, type DependencyContainer } from "npm:tsyringe@^4.8.0";
+
+import RouteProcessor from "./route-processor.ts";
+
 import type Route from "./route.ts";
-import ParamParser from "./param-parser.ts";
 
-import {
-  type Context,
-  type Middleware,
-  NotFound,
-} from "jsr:@raptor/framework@0.2.0";
+export default class Router extends ServiceProvider {
+  /**
+   * The kernel container.
+   */
+  override container : DependencyContainer;
 
-/**
- * The application router.
- */
-export default class Router implements Middleware {
   /**
    * All loaded routes.
    */
@@ -22,7 +22,10 @@ export default class Router implements Middleware {
    * @constructor
    */
   constructor() {
+    super();
+
     this.routes = [];
+    this.container = container;
   }
 
   /**
@@ -63,48 +66,13 @@ export default class Router implements Middleware {
   }
 
   /**
-   * Handle the current http context and process routes.
+   * Register the middleware service for handling routes.
    *
-   * @param context The current http context.
    * @returns void
-   * @throws {NotFound | TypeError}
    */
-  public async handler(context: Context): Promise<void> {
-    const { request } = context;
-
-    const route = this.getRouteFromRequest(request);
-
-    if (!route || request.method !== route.options.method) {
-      throw new NotFound();
-    }
-
-    const parser = new ParamParser(route.options.pathname, request.url);
-    const params = parser.parse();
-
-    context.params = params;
-
-    if (typeof route.options.handler !== "function") {
-      throw new TypeError("No handler function was provided for route");
-    }
-
-    await route.options.handler(context);
-  }
-
-  /**
-   * Get a matching route from the request.
-   *
-   * @param request The current http request.
-   * @returns A matched route definition.
-   */
-  private getRouteFromRequest(request: Request): Route | null {
-    const route = this.routes.find(({ options }) =>
-      options.pathname.exec(request.url)
-    );
-
-    if (!route) {
-      return null;
-    }
-
-    return route;
+  override register(): void {
+    this.container.register('middleware', { useFactory: () => {
+      return new RouteProcessor(this.routes)
+    }})
   }
 }
