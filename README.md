@@ -65,6 +65,8 @@ const route = new Route({
 router.add(route);
 
 app.add(router);
+
+app.listen({ port: 8000 });
 ```
 
 ### Route parameters
@@ -77,11 +79,26 @@ they are present in the URLPattern pathname.
 If a JSON object is assigned to the response body then the response content-type will be automatically set to `application/json`. You can override the header by manually assigning it within a middleware callback as follows:
 
 ```ts
-app.add({
-  handler: (context: Context) => {
+import { type Context, Kernel, Middleware, ServiceProvider } from "jsr:@raptor/framework";
+
+const app = new Kernel();
+
+class HelloWorld extends Middleware {
+  override handler(context: Context) {
     context.response.headers.set('content-type', 'text/plain');
+    context.response.body = 'Hello World!';
   }
-});
+}
+
+class MyService extends ServiceProvider {
+  override register() {
+    this.container.registerInstance('middleware', MyMiddleware);
+  }
+}
+
+app.add(MyService);
+
+app.listen({ port: 8000 });
 ```
 
 # License
