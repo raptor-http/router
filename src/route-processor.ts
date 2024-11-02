@@ -11,7 +11,7 @@ import {
  * The application router.
  */
 export default class RouteProcessor implements Middleware {
-  private routes : Route[];
+  private routes: Route[];
 
   constructor(routes: Route[]) {
     this.routes = routes;
@@ -35,7 +35,7 @@ export default class RouteProcessor implements Middleware {
 
     const parser = new ParamParser(
       new URLPattern(route.options.pathname, request.url),
-      request.url
+      request.url,
     );
 
     const params = parser.parse();
@@ -59,7 +59,7 @@ export default class RouteProcessor implements Middleware {
     const route = this.routes.find(({ options }) => {
       const pattern = new URLPattern(options.pathname, request.url);
 
-      return pattern.exec(request.url)
+      return pattern.exec(request.url);
     });
 
     if (!route) {

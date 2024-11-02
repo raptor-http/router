@@ -9,7 +9,7 @@ export default class Router extends ServiceProvider {
   /**
    * The kernel container.
    */
-  override container : DependencyContainer;
+  override container: DependencyContainer;
 
   /**
    * All loaded routes.
@@ -71,8 +71,10 @@ export default class Router extends ServiceProvider {
    * @returns void
    */
   override register(): void {
-    this.container.register("middleware", { useFactory: () => {
-      return new RouteProcessor(this.routes)
-    }})
+    this.container.register("middleware", {
+      useFactory: () => {
+        return new RouteProcessor(this.routes);
+      },
+    });
   }
 }
