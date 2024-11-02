@@ -2,10 +2,7 @@ import "npm:reflect-metadata@0.2.2";
 
 import { container } from "npm:tsyringe@^4.8.0";
 
-import {
-  assertArrayIncludes,
-  assertEquals,
-} from "jsr:@std/assert";
+import { assertArrayIncludes, assertEquals } from "jsr:@std/assert";
 
 import { Kernel, Request } from "jsr:@raptor/framework@0.3.0";
 
@@ -129,17 +126,17 @@ Deno.test("test context contains route params", async () => {
     pathname: "/test/:id",
     method: "GET",
     handler: (context: Context) => {
-      context.response.headers.set('content-type', 'application/json');
+      context.response.headers.set("content-type", "application/json");
       context.response.body = {
         id: context.params.id,
-      }
+      };
     },
   });
 
   router.add(route);
 
   kernel.add(router);
-  
+
   const response = await kernel["handleResponse"](
     new Request("http://test.com/test/1"),
   );
