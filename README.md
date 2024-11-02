@@ -93,7 +93,7 @@ class HelloWorld extends Middleware {
 
 class MyService extends ServiceProvider {
   override register() {
-    this.container.registerInstance('middleware', MyMiddleware);
+    this.container.registerInstance('middleware', HelloWorld);
   }
 }
 
