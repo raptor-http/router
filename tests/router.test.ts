@@ -1,19 +1,24 @@
+import "npm:reflect-metadata@0.2.2";
+
+import { container } from "npm:tsyringe@^4.8.0";
+
 import {
   assertArrayIncludes,
   assertEquals,
-  assertRejects,
 } from "jsr:@std/assert";
 
-import { type Context, Request, Response } from "jsr:@raptor/framework@0.2.0";
+import { Kernel, Request } from "jsr:@raptor/framework@0.3.0";
 
-import { Route, Router } from "../mod.ts";
+import Route from "../src/route.ts";
+import Router from "../src/router.ts";
+import type { Context } from "../src/interfaces/context.ts";
 
 Deno.test("test router accepts new route", () => {
   const router = new Router();
 
   const route = new Route({
     name: "test.route",
-    pathname: new URLPattern("/test-route", "http://test.com"),
+    pathname: "/test-route",
     method: "GET",
     handler: (context: Context) => {
       console.log(context);
@@ -30,7 +35,7 @@ Deno.test("test router accepts new routes", () => {
 
   const routeOne = new Route({
     name: "test.route_1",
-    pathname: new URLPattern("/test-route-1", "https://test.com"),
+    pathname: "/test-route-1",
     method: "GET",
     handler: (context: Context) => {
       console.log(context);
@@ -39,7 +44,7 @@ Deno.test("test router accepts new routes", () => {
 
   const routeTwo = new Route({
     name: "test.route_2",
-    pathname: new URLPattern("/test-route-2", "http://test.com"),
+    pathname: "/test-route-2",
     method: "GET",
     handler: (context: Context) => {
       console.log(context);
@@ -55,16 +60,13 @@ Deno.test("test router accepts new routes", () => {
 });
 
 Deno.test("test route influences context response", async () => {
-  const context = {
-    request: new Request(new URL("http://test.com/test-route")),
-    response: new Response(null),
-  } as Context;
+  const kernel = new Kernel();
 
   const router = new Router();
 
   const route = new Route({
     name: "test.route",
-    pathname: new URLPattern("/test-route", "http://test.com"),
+    pathname: "/test-route",
     method: "GET",
     handler: (context: Context) => {
       context.response.body = {
@@ -75,19 +77,27 @@ Deno.test("test route influences context response", async () => {
 
   router.add(route);
 
-  await router.handler(context);
+  kernel.add(router);
 
-  const response = await new Response(context.response.body).text();
+  const response = await kernel["handleResponse"](
+    new Request("http://test.com/test-route"),
+  );
 
-  assertEquals(response, JSON.stringify({ influence: true }));
+  const body = await response.text();
+
+  assertEquals(body, JSON.stringify({ influence: true }));
+
+  container.reset();
 });
 
-Deno.test("test unknown route throws not found", () => {
+Deno.test("test unknown route throws not found", async () => {
+  const kernel = new Kernel();
+
   const router = new Router();
 
   const route = new Route({
     name: "test.route",
-    pathname: new URLPattern("/test-route", "http://test.com"),
+    pathname: "/test-route",
     method: "GET",
     handler: (context: Context) => {
       context.response.body = JSON.stringify({
@@ -98,32 +108,43 @@ Deno.test("test unknown route throws not found", () => {
 
   router.add(route);
 
-  const context = {
-    request: new Request(new URL("http://test.com/unknown-route")),
-    response: new Response(null),
-  } as Context;
+  kernel.add(router);
 
-  assertRejects(() => router.handler(context));
+  const response = await kernel["handleResponse"](
+    new Request("http://test.com/unknown-route"),
+  );
+
+  assertEquals(response.status, 404);
+
+  container.reset();
 });
 
-Deno.test("test context contains route params", () => {
+Deno.test("test context contains route params", async () => {
+  const kernel = new Kernel();
+
   const router = new Router();
 
   const route = new Route({
     name: "test.route",
-    pathname: new URLPattern("/test/:id", "http://test.com"),
+    pathname: "/test/:id",
     method: "GET",
-    handler: () => {},
+    handler: (context: Context) => {
+      context.response.headers.set('content-type', 'application/json');
+      context.response.body = {
+        id: context.params.id,
+      }
+    },
   });
 
   router.add(route);
 
-  const context = {
-    request: new Request(new URL("http://test.com/test/1")),
-    response: new Response(null),
-  } as Context;
+  kernel.add(router);
+  
+  const response = await kernel["handleResponse"](
+    new Request("http://test.com/test/1"),
+  );
 
-  router.handler(context).then(() => {
-    assertEquals(context.params.id, "1");
-  });
+  assertEquals(await response.json(), { id: "1" });
+
+  container.reset();
 });

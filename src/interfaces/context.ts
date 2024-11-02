@@ -1,6 +1,6 @@
 import type { Params } from "./params.ts";
 
-import type { Request, Response } from "@raptor/framework";
+import type { Request, Response } from "jsr:@raptor/framework@0.3.0";
 
 /**
  * The HTTP context definition.

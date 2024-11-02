@@ -1,4 +1,4 @@
-import { ServiceProvider } from "@raptor/framework";
+import { ServiceProvider } from "jsr:@raptor/framework@0.3.0";
 import { container, type DependencyContainer } from "npm:tsyringe@^4.8.0";
 
 import RouteProcessor from "./route-processor.ts";
