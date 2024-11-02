@@ -33,7 +33,11 @@ export default class RouteProcessor implements Middleware {
       throw new NotFound();
     }
 
-    const parser = new ParamParser(route.options.pathname, request.url);
+    const parser = new ParamParser(
+      new URLPattern(route.options.pathname, request.url),
+      request.url
+    );
+
     const params = parser.parse();
 
     context.params = params;
@@ -52,9 +56,11 @@ export default class RouteProcessor implements Middleware {
    * @returns A matched route definition.
    */
   private getRouteFromRequest(request: Request): Route | null {
-    const route = this.routes.find(({ options }) =>
-      options.pathname.exec(request.url)
-    );
+    const route = this.routes.find(({ options }) => {
+      const pattern = new URLPattern(options.pathname, request.url);
+
+      return pattern.exec(request.url)
+    });
 
     if (!route) {
       return null;

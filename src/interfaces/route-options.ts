@@ -10,7 +10,7 @@ export interface RouteOptions {
   /**
    * The assigned URL pattern for the route.
    */
-  pathname: URLPattern;
+  pathname: string;
 
   /**
    * The HTTP method allowed to the route.

@@ -54,7 +54,7 @@ const router = new Router();
 const route = new Route({
   name: "person.read",
   method: "GET",
-  pathname: new URLPattern("/person/:name");
+  pathname: "/person/:name";
   handler: (context: Context) => {
     const { name } = context.params;
 
@@ -86,6 +86,7 @@ const app = new Kernel();
 class HelloWorld extends Middleware {
   override handler(context: Context) {
     context.response.headers.set('content-type', 'text/plain');
+
     context.response.body = 'Hello World!';
   }
 }

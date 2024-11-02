@@ -71,7 +71,7 @@ export default class Router extends ServiceProvider {
    * @returns void
    */
   override register(): void {
-    this.container.register('middleware', { useFactory: () => {
+    this.container.register("middleware", { useFactory: () => {
       return new RouteProcessor(this.routes)
     }})
   }
