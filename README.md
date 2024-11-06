@@ -58,13 +58,13 @@ const route = new Route({
   handler: (context: Context) => {
     const { name } = context.params;
 
-    context.response.body = `Hello ${name}`;
+    return `Hello ${name}`;
   }
 });
 
 router.add(route);
 
-app.add(router);
+app.add((context: Context) => router.handler(context));
 
 app.listen({ port: 8000 });
 ```
@@ -73,34 +73,6 @@ app.listen({ port: 8000 });
 
 Route parameters are processed and available via Context (`context.params`) if
 they are present in the URLPattern pathname.
-
-### Returning JSON responses
-
-If a JSON object is assigned to the response body then the response content-type will be automatically set to `application/json`. You can override the header by manually assigning it within a middleware callback as follows:
-
-```ts
-import { type Context, Kernel, Middleware, ServiceProvider } from "jsr:@raptor/framework";
-
-const app = new Kernel();
-
-class HelloWorld extends Middleware {
-  override handler(context: Context) {
-    context.response.headers.set('content-type', 'text/plain');
-
-    context.response.body = 'Hello World!';
-  }
-}
-
-class MyService extends ServiceProvider {
-  override register() {
-    this.container.registerInstance('middleware', HelloWorld);
-  }
-}
-
-app.add(MyService);
-
-app.listen({ port: 8000 });
-```
 
 # License
 

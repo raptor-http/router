@@ -1,6 +1,6 @@
 {
   "name": "@raptor/router",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "exports": "./mod.ts",
   "publish": {
     "exclude": [
@@ -11,8 +11,8 @@
     ]
   },
   "tasks": {
-    "test": "deno test --coverage=coverage-report --allow-all --parallel",
-    "test-coverage": "deno coverage coverage-report"
+    "test": "APP_URL=http://localhost:8000 deno test --coverage=coverage-report --allow-all --parallel",
+    "test-coverage": "APP_URL=http://localhost:8000 deno coverage coverage-report"
   },
   "fmt": {
     "exclude": [
