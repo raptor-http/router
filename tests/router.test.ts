@@ -73,9 +73,11 @@ Deno.test("test route influences context response", async () => {
 
   kernel.add((context: Context) => router.handler(context));
 
-  const response = await kernel.respond(new Request(
-    `${Deno.env.get('APP_URL')}/test-route`
-  ));
+  const response = await kernel.respond(
+    new Request(
+      `${Deno.env.get("APP_URL")}/test-route`,
+    ),
+  );
 
   const body = await response.json();
 
@@ -102,9 +104,11 @@ Deno.test("test unknown route throws not found", async () => {
 
   kernel.add((context: Context) => router.handler(context));
 
-  const response = await kernel.respond(new Request(
-    `${Deno.env.get('APP_URL') as string}/another-route`
-  ));
+  const response = await kernel.respond(
+    new Request(
+      `${Deno.env.get("APP_URL") as string}/another-route`,
+    ),
+  );
 
   assertEquals(response.status, 404);
 });
@@ -131,9 +135,11 @@ Deno.test("test context contains route params", async () => {
 
   kernel.add((context: Context) => router.handler(context));
 
-  const response = await kernel.respond(new Request(
-    `${Deno.env.get('APP_URL') as string}/test/1`
-  ));
+  const response = await kernel.respond(
+    new Request(
+      `${Deno.env.get("APP_URL") as string}/test/1`,
+    ),
+  );
 
   assertEquals(await response.json(), { id: "1" });
 });

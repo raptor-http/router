@@ -1,4 +1,4 @@
-import { NotFound } from "jsr:@raptor/framework@0.3.0";
+import { NotFound } from "jsr:@raptor/framework@0.4.0";
 
 import ParamParser from "./param-parser.ts";
 
@@ -52,10 +52,10 @@ export default class Router {
    * Handle the current http context and process routes.
    *
    * @param context The current http context.
-   * @returns any Returns any value from handler.
+   * @returns An unknown data type.
    * @throws {NotFound | TypeError}
    */
-  public handler(context: Context): any {
+  public handler(context: Context): unknown {
     const { request } = context;
 
     const route = this.getRouteFromRequest(request);
