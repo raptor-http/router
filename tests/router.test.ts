@@ -1,11 +1,10 @@
 import { assertArrayIncludes, assertEquals } from "jsr:@std/assert";
 
-import { Kernel } from "jsr:@raptor/framework@0.4.0";
-
 import Route from "../src/route.ts";
 import Router from "../src/router.ts";
-
-import type { Context } from "../src/interfaces/context.ts";
+import type Context from "../src/route-context.ts";
+import { Kernel } from "jsr:@raptor/framework@0.4.1";
+import { HttpMethod } from "../src/enums/http-method.ts";
 
 Deno.test("test router accepts new route", () => {
   const router = new Router();
@@ -13,7 +12,7 @@ Deno.test("test router accepts new route", () => {
   const route = new Route({
     name: "test.route",
     pathname: "/test-route",
-    method: "GET",
+    method: HttpMethod.GET,
     handler: (context: Context) => {
       console.log(context);
     },
@@ -30,7 +29,7 @@ Deno.test("test router accepts new routes", () => {
   const routeOne = new Route({
     name: "test.route_1",
     pathname: "/test-route-1",
-    method: "GET",
+    method: HttpMethod.GET,
     handler: (context: Context) => {
       console.log(context);
     },
@@ -39,7 +38,7 @@ Deno.test("test router accepts new routes", () => {
   const routeTwo = new Route({
     name: "test.route_2",
     pathname: "/test-route-2",
-    method: "GET",
+    method: HttpMethod.GET,
     handler: (context: Context) => {
       console.log(context);
     },
@@ -61,7 +60,7 @@ Deno.test("test route influences context response", async () => {
   const route = new Route({
     name: "test.route",
     pathname: "/test-route",
-    method: "GET",
+    method: HttpMethod.GET,
     handler: () => {
       return {
         influence: true,
@@ -92,7 +91,7 @@ Deno.test("test unknown route throws not found", async () => {
   const route = new Route({
     name: "test.route",
     pathname: "/test-route",
-    method: "GET",
+    method: HttpMethod.GET,
     handler: () => {
       return {
         influence: true,
@@ -121,7 +120,7 @@ Deno.test("test context contains route params", async () => {
   const route = new Route({
     name: "test.route",
     pathname: "/test/:id",
-    method: "GET",
+    method: HttpMethod.GET,
     handler: (context: Context) => {
       context.response.headers.set("content-type", "application/json");
 

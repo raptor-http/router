@@ -44,8 +44,8 @@ for more information.
 ### Adding routes to the router
 
 ```ts
-import { Router, Route } from "jsr:@raptor/router";
-import { Kernel, type Context } from "jsr:@raptor/framework";
+import { Kernel, Context } from "jsr:@raptor/framework";
+import { Router, Route, Context as RouteContext } from "jsr:@raptor/router";
 
 const app = new Kernel();
 
@@ -55,7 +55,7 @@ const route = new Route({
   name: "person.read",
   method: "GET",
   pathname: "/person/:name";
-  handler: (context: Context) => {
+  handler: (context: RouteContext) => {
     const { name } = context.params;
 
     return `Hello ${name}`;
@@ -71,8 +71,7 @@ app.listen({ port: 8000 });
 
 ### Route parameters
 
-Route parameters are processed and available via Context (`context.params`) if
-they are present in the URLPattern pathname.
+Route parameter values are processed and available via the Router Context obkect (`context.params`) if they are present in the route's pathname.
 
 # License
 

@@ -1,3 +1,5 @@
+import type HttpMethod from "../enums/http-method.ts";
+
 /**
  * The route options definition.
  */
@@ -15,7 +17,7 @@ export interface RouteOptions {
   /**
    * The HTTP method allowed to the route.
    */
-  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  method: HttpMethod | HttpMethod[];
 
   /**
    * The handler function when processing the route.

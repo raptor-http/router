@@ -1,9 +1,7 @@
-import { NotFound } from "jsr:@raptor/framework@0.4.0";
-
-import ParamParser from "./param-parser.ts";
-
 import type Route from "./route.ts";
-import type { Context } from "./interfaces/context.ts";
+import ParamParser from "./param-parser.ts";
+import RouteContext from "./route-context.ts";
+import { type Context, NotFound } from "jsr:@raptor/framework@0.4.1";
 
 export default class Router {
   /**
@@ -56,14 +54,23 @@ export default class Router {
    * @throws {NotFound | TypeError}
    */
   public handler(context: Context): unknown {
-    const { request } = context;
+    // Establish a new context from the base.
+    const routeContext = new RouteContext(
+      context.request,
+      context.response,
+    );
 
+    const { request } = routeContext;
+
+    // Attempt to match a route from the request.
     const route = this.getRouteFromRequest(request);
 
-    if (!route || request.method !== route.options.method) {
+    // If no matches were found or the method is incorrect, throw.
+    if (!route || !this.isValidHttpMethod(request, route)) {
       throw new NotFound();
     }
 
+    // Determine any route parameters that might be present.
     const parser = new ParamParser(
       new URLPattern(route.options.pathname, request.url),
       request.url,
@@ -71,13 +78,34 @@ export default class Router {
 
     const params = parser.parse();
 
-    context.params = params;
+    // Pass the route parameters to the route context.
+    routeContext.params = params;
 
+    // If no handler function exists on route, throw.
     if (typeof route.options.handler !== "function") {
       throw new TypeError("No handler function was provided for route");
     }
 
-    return route.options.handler(context);
+    return route.options.handler(routeContext);
+  }
+
+  /**
+   * Check the validity of the current HTTP method against the route options.
+   *
+   * @param request The current HTTP request object.
+   * @param route The current matched route.
+   * @returns The validity of the current HTTP method.
+   */
+  private isValidHttpMethod(request: Request, route: Route): boolean {
+    if (request.method === route.options.method) {
+      return true;
+    }
+
+    if (Object.values(route.options.method).includes(request.method)) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
