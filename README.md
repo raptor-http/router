@@ -45,7 +45,7 @@ for more information.
 
 ```ts
 import { Kernel, Context } from "jsr:@raptor/framework";
-import { Router, Route, Context as RouteContext } from "jsr:@raptor/router";
+import { Router, Route, HttpMethod, Context as RouteContext } from "jsr:@raptor/router";
 
 const app = new Kernel();
 
@@ -53,7 +53,7 @@ const router = new Router();
 
 const route = new Route({
   name: "index",
-  method: "GET",
+  method: HttpMethod.GET,
   pathname: "/";
   handler: () => 'Hello, Dr Malcolm!'
 });
@@ -70,13 +70,13 @@ app.listen({ port: 8000 });
 Route parameter values are processed and available via the router's context object (`context.params`) if they are found in the route's pathname.
 
 ```ts
-import { Route, Context } from "jsr:@raptor/router";
+import { Route, Context, HttpMethod } from "jsr:@raptor/router";
 
 /* ... */
 
 const route = new Route({
   name: "person.read",
-  method: "GET",
+  method: HttpMethod.GET,
   pathname: "/person/:name";
   handler: (context: Context) => {
     const { name } = context.params;
