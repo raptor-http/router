@@ -16,15 +16,16 @@ See more information about the Raptor framework here: <a href="https://jsr.io/@r
 # Usage
 
 > [!NOTE]
-> This is under heavy development and not yet suitable for production use, you
-> have been warned.
+> This is currently under heavy development and is not yet suitable for production use. Please proceed with caution.
 
 ## Installation
+
+To start using the router, simply install into an existing Raptor application via the CLI or import it directly from JSR.
 
 ### Using the Deno CLI
 
 ```
-deno add @raptor/router
+deno add jsr:@raptor/router
 ```
 
 ### Importing with JSR
@@ -32,20 +33,15 @@ deno add @raptor/router
 Raptor is also available to import directly via JSR:
 [https://jsr.io/@raptor/router](https://jsr.io/@raptor/router)
 
-```ts
-import { Route, Router } from "jsr:@raptor/router";
-```
-
 ## Usage
 
-The built-in router works in the same way as regular Raptor middleware, allowing you to pass in routes using Web API standard URL patterns. See [mozilla.org/URLPattern](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern)
-for more information.
+The built-in router operates similarly to standard Raptor middleware, enabling you to define routes using Web API standard URL patterns. For further details, visit [mozilla.org/URLPattern](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern).
 
 ### Adding routes to the router
 
 ```ts
 import { Kernel, Context } from "jsr:@raptor/framework";
-import { Router, Route, HttpMethod, Context as RouteContext } from "jsr:@raptor/router";
+import { Router, Route, HttpMethod } from "jsr:@raptor/router";
 
 const app = new Kernel();
 
@@ -54,7 +50,7 @@ const router = new Router();
 const route = new Route({
   name: "index",
   method: HttpMethod.GET,
-  pathname: "/";
+  pathname: "/",
   handler: () => 'Hello, Dr Malcolm!'
 });
 
@@ -62,12 +58,12 @@ router.add(route);
 
 app.add((context: Context) => router.handler(context));
 
-app.listen({ port: 8000 });
+app.serve({ port: 8000 });
 ```
 
 ### Route parameters
 
-Route parameter values are processed and available via the router's context object (`context.params`) if they are found in the route's pathname.
+Route parameter values are processed and available via the router's context object (`context.params`) if they are found in the route's pathname. Make sure to import the router's `Context` object, rather than the base Raptor `Context` object.
 
 ```ts
 import { Route, Context, HttpMethod } from "jsr:@raptor/router";
