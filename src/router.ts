@@ -1,7 +1,7 @@
 import type Route from "./route.ts";
 import ParamParser from "./param-parser.ts";
 import RouteContext from "./route-context.ts";
-import { type Context, NotFound } from "jsr:@raptor/framework";
+import { type Context, NotFound } from "jsr:@raptor/framework@0.7.2";
 
 export default class Router {
   /**
