@@ -4,8 +4,8 @@
 
 <p align="center">
   <a href="https://github.com/briward/raptor-router/actions"><img src="https://github.com/briward/raptor-router/workflows/ci/badge.svg" alt="Build Status"></a>
-  <a href="jsr.io/@raptor/router"><img src="https://jsr.io/badges/@raptor/router" /></a>
-  <a href="jsr.io/@raptor/router score"><img src="https://jsr.io/badges/@raptor/router/score" /></a>
+  <a href="https://jsr.io/@raptor/router"><img src="https://jsr.io/badges/@raptor/router" /></a>
+  <a href="https://jsr.io/@raptor/router score"><img src="https://jsr.io/badges/@raptor/router/score" /></a>
   <a href="https://jsr.io/@raptor"><img src="https://jsr.io/badges/@raptor" alt="" /></a>
 </p>
 
