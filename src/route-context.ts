@@ -1,4 +1,4 @@
-import { Context } from "jsr:@raptor/framework@0.8.3";
+import { Context } from "jsr:@raptor/framework@0.8.4";
 import type { Params } from "./interfaces/params.ts";
 
 /**

@@ -3,7 +3,7 @@ import { assertArrayIncludes, assertEquals } from "jsr:@std/assert";
 import Route from "../src/route.ts";
 import Router from "../src/router.ts";
 import type Context from "../src/route-context.ts";
-import { Kernel } from "jsr:@raptor/framework@0.8.3";
+import { Kernel } from "jsr:@raptor/framework@0.8.4";
 import { HttpMethod } from "../src/enums/http-method.ts";
 
 Deno.test("test router accepts new route", () => {
