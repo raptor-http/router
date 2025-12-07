@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/raptor-http/brand/raw/main/assets/logo.svg" width="150" height="150" alt="Raptor Framework" />
+  <img src="https://raw.githubusercontent.com/raptor-http/brand/main/assets/logo.svg" width="150" height="150" alt="Raptor Framework" />
 </p>
 
 <p align="center">
