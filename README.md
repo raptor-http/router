@@ -33,56 +33,11 @@ deno add jsr:@raptor/router
 Raptor is also available to import directly via JSR:
 [https://jsr.io/@raptor/router](https://jsr.io/@raptor/router)
 
-### Usage
+## Documentation
 
-The built-in router operates similarly to standard Raptor middleware, enabling you to define routes using Web API standard URL patterns. For further details, visit [mozilla.org/URLPattern](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern).
-
-#### Adding routes to the router
-
-```ts
-import { Kernel, Context } from "jsr:@raptor/framework";
-import { Router, Route, HttpMethod } from "jsr:@raptor/router";
-
-const app = new Kernel();
-
-const router = new Router();
-
-const route = new Route({
-  name: "index",
-  method: HttpMethod.GET,
-  pathname: "/",
-  handler: () => 'Hello, Dr Malcolm!'
-});
-
-router.add(route);
-
-app.add((context: Context) => router.handler(context));
-
-app.serve({ port: 8000 });
-```
-
-#### Route parameters
-
-Route parameter values are processed and available via the router's context object (`context.params`) if they are found in the route's pathname. Make sure to import the router's `Context` object, rather than the base Raptor `Context` object.
-
-```ts
-import { Route, Context, HttpMethod } from "jsr:@raptor/router";
-
-/* ... */
-
-const route = new Route({
-  name: "person.read",
-  method: HttpMethod.GET,
-  pathname: "/person/:name";
-  handler: (context: Context) => {
-    const { name } = context.params;
-
-    return `Hello ${name}`;
-  }
-});
-```
+Full documentation can be found on [https://raptorframework.com/docs](https://raptorframework.com/docs).
 
 ## License
 
-_Copyright 2024, @briward. All rights reserved. The framework is licensed under
+_Copyright 2025, @briward. All rights reserved. The framework is licensed under
 the MIT license._
