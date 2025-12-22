@@ -1,6 +1,6 @@
 {
   "name": "@raptor/router",
-  "version": "0.5.8",
+  "version": "0.6.0",
   "exports": "./mod.ts",
   "publish": {
     "exclude": [
