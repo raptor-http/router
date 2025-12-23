@@ -1,6 +1,6 @@
 {
   "name": "@raptor/router",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "exports": "./mod.ts",
   "publish": {
     "exclude": [
@@ -19,5 +19,8 @@
       "README.md"
     ]
   },
-  "lock": false
+  "lock": false,
+  "imports": {
+    "@raptor/framework": "jsr:@raptor/framework@^0.10.0"
+  }
 }

@@ -2,8 +2,8 @@ import { assertArrayIncludes, assertEquals } from "jsr:@std/assert";
 
 import Route from "../src/route.ts";
 import Router from "../src/router.ts";
+import { Kernel } from "@raptor/framework";
 import type Context from "../src/route-context.ts";
-import { Kernel } from "jsr:@raptor/framework@0.9.0";
 import { HttpMethod } from "../src/enums/http-method.ts";
 
 Deno.test("test router accepts new route", () => {
@@ -70,7 +70,7 @@ Deno.test("test route influences context response", async () => {
 
   router.add(route);
 
-  kernel.add((context: Context) => router.handler(context));
+  kernel.add((context: Context) => router.handle(context));
 
   const response = await kernel.respond(
     new Request(
@@ -101,7 +101,7 @@ Deno.test("test unknown route throws not found", async () => {
 
   router.add(route);
 
-  kernel.add((context: Context) => router.handler(context));
+  kernel.add((context: Context) => router.handle(context));
 
   const response = await kernel.respond(
     new Request(
@@ -132,7 +132,7 @@ Deno.test("test context contains route params", async () => {
 
   router.add(route);
 
-  kernel.add((context: Context) => router.handler(context));
+  kernel.add((context: Context) => router.handle(context));
 
   const response = await kernel.respond(
     new Request(

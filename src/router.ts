@@ -1,7 +1,7 @@
 import type Route from "./route.ts";
 import ParamParser from "./param-parser.ts";
 import RouteContext from "./route-context.ts";
-import { type Context, NotFound } from "jsr:@raptor/framework@0.9.0";
+import { type Context, NotFound } from "@raptor/framework";
 
 export default class Router {
   /**
@@ -53,7 +53,7 @@ export default class Router {
    * @returns An unknown data type.
    * @throws {NotFound | TypeError}
    */
-  public handler(context: Context): unknown {
+  public handle(context: Context): unknown {
     // Establish a new context from the base.
     const routeContext = new RouteContext(
       context.request,
