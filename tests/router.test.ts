@@ -1,4 +1,4 @@
-import { assertArrayIncludes, assertEquals } from "jsr:@std/assert";
+import { assertArrayIncludes, assertEquals } from "@std/assert";
 
 import Route from "../src/route.ts";
 import Router from "../src/router.ts";
