@@ -6,6 +6,8 @@ import { Kernel } from "@raptor/framework";
 import type Context from "../src/route-context.ts";
 import { HttpMethod } from "../src/enums/http-method.ts";
 
+const APP_URL = "http://localhost:8000";
+
 Deno.test("test router accepts new route", () => {
   const router = new Router();
 
@@ -74,7 +76,7 @@ Deno.test("test route influences context response", async () => {
 
   const response = await kernel.respond(
     new Request(
-      `${Deno.env.get("APP_URL")}/test-route`,
+      `${APP_URL}/test-route`,
     ),
   );
 
@@ -105,7 +107,7 @@ Deno.test("test unknown route throws not found", async () => {
 
   const response = await kernel.respond(
     new Request(
-      `${Deno.env.get("APP_URL") as string}/another-route`,
+      `${APP_URL}/another-route`,
     ),
   );
 
@@ -136,7 +138,7 @@ Deno.test("test context contains route params", async () => {
 
   const response = await kernel.respond(
     new Request(
-      `${Deno.env.get("APP_URL") as string}/test/1`,
+      `${APP_URL}/test/1`,
     ),
   );
 

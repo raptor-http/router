@@ -1,5 +1,4 @@
 import type Route from "./route.ts";
-import ParamParser from "./param-parser.ts";
 import RouteContext from "./route-context.ts";
 import { type Context, NotFound } from "@raptor/framework";
 
@@ -70,16 +69,8 @@ export default class Router {
       throw new NotFound();
     }
 
-    // Determine any route parameters that might be present.
-    const parser = new ParamParser(
-      new URLPattern(route.options.pathname, request.url),
-      request.url,
-    );
-
-    const params = parser.parse();
-
     // Pass the route parameters to the route context.
-    routeContext.params = params;
+    routeContext.params = route.extractParams(request.url);
 
     // If no handler function exists on route, throw.
     if (typeof route.options.handler !== "function") {
@@ -115,16 +106,8 @@ export default class Router {
    * @returns A matched route definition.
    */
   private getRouteFromRequest(request: Request): Route | null {
-    const route = this.routes.find(({ options }) => {
-      const pattern = new URLPattern(options.pathname, request.url);
-
-      return pattern.exec(request.url);
-    });
-
-    if (!route) {
-      return null;
-    }
-
-    return route;
+    return this.routes.find((route) => {
+      return route.pattern.test(request.url);
+    }) ?? null;
   }
 }
