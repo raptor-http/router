@@ -44,8 +44,8 @@ export default class Route {
       pathname: options.pathname,
     });
 
-    const hasParams = options.pathname.includes(':');
-    const hasWildcard = options.pathname.includes('*');
+    const hasParams = options.pathname.includes(":");
+    const hasWildcard = options.pathname.includes("*");
 
     if (hasParams || hasWildcard) {
       const segments: string[] = [];
@@ -56,7 +56,7 @@ export default class Route {
           return "/([^/]+)";
         })
         .replace(/\/\*/g, () => {
-          segments.push('*');
+          segments.push("*");
           return "(/.*)?";
         });
 
@@ -87,8 +87,8 @@ export default class Route {
     this.paramNames.forEach((name, index) => {
       const value = match[index + 1];
 
-      if (name === '*') {
-        params['*'] = value?.replace(/^\//, '') || '';
+      if (name === "*") {
+        params["*"] = value?.replace(/^\//, "") || "";
 
         return;
       }

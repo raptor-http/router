@@ -41,10 +41,10 @@ export default class Router {
       : [route.options.method];
 
     // Is the route static?
-    const isStatic = !route.options.pathname.includes(':');
+    const isStatic = !route.options.pathname.includes(":");
 
     // Run through each method and register route.
-    methods.forEach(method => {
+    methods.forEach((method) => {
       if (isStatic) {
         const key = `${method}:${route.options.pathname}`;
 
@@ -67,7 +67,7 @@ export default class Router {
    * @param routes One or more route definitions.
    */
   public addRoutes(routes: Route[]): void {
-    routes.forEach(route => this.addRoute(route));
+    routes.forEach((route) => this.addRoute(route));
   }
 
   /**
