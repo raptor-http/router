@@ -240,3 +240,24 @@ Deno.test("test route with multiple HTTP methods", async () => {
 
   assertEquals(putResponse.status, 404);
 });
+
+Deno.test("test wildcard route", async () => {
+  const kernel = new Kernel();
+  const router = new Router();
+
+  const route = new Route({
+    name: "docs",
+    pathname: "/wildcard/*",
+    method: HttpMethod.GET,
+    handler: () => ({ matched: "wildcard" }),
+  });
+
+  router.add(route);
+  kernel.add((context: Context) => router.handle(context));
+
+  const response = await kernel.respond(
+    new Request(`${APP_URL}/wildcard/hello`),
+  );
+
+  assertEquals(await response.json(), { matched: "wildcard" });
+});
