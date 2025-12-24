@@ -13,11 +13,6 @@
 
 See more information about the Raptor framework here: <a href="https://jsr.io/@raptor/framework">https://jsr.io/@raptor/framework</a>.
 
-## Usage
-
-> [!NOTE]
-> This is currently under heavy development and is not yet suitable for production use. Please proceed with caution.
-
 ### Installation
 
 To start using the router, simply install into an existing Raptor application via the CLI or import it directly from JSR.
