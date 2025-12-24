@@ -4,9 +4,14 @@ import { type Context, NotFound } from "@raptor/framework";
 
 export default class Router {
   /**
-   * All loaded routes.
+   * All stored static routes.
    */
-  public routes: Route[] = [];
+  public staticRoutes: Map<string, Route> = new Map();
+
+  /**
+   * All stored dynamic routes, by method.
+   */
+  public dynamicRoutesByMethod: Map<string, Route[]> = new Map();
 
   /**
    * Add one or more routes to the router.
@@ -30,10 +35,30 @@ export default class Router {
    * @param route A single route definition.
    */
   public addRoute(route: Route): void {
-    this.routes = [
-      ...this.routes,
-      route,
-    ];
+    // Are we dealing with a multi-method route?
+    const methods = Array.isArray(route.options.method)
+      ? route.options.method
+      : [route.options.method];
+
+    // Is the route static?
+    const isStatic = !route.options.pathname.includes(':');
+
+    // Run through each method and register route.
+    methods.forEach(method => {
+      if (isStatic) {
+        const key = `${method}:${route.options.pathname}`;
+
+        this.staticRoutes.set(key, route);
+
+        return;
+      }
+
+      if (!this.dynamicRoutesByMethod.has(method)) {
+        this.dynamicRoutesByMethod.set(method, []);
+      }
+
+      this.dynamicRoutesByMethod.get(method)!.push(route);
+    });
   }
 
   /**
@@ -42,7 +67,7 @@ export default class Router {
    * @param routes One or more route definitions.
    */
   public addRoutes(routes: Route[]): void {
-    this.routes = [...this.routes, ...routes];
+    routes.forEach(route => this.addRoute(route));
   }
 
   /**
@@ -106,7 +131,17 @@ export default class Router {
    * @returns A matched route definition.
    */
   private getRouteFromRequest(request: Request): Route | null {
-    return this.routes.find((route) => {
+    const url = new URL(request.url);
+
+    // Try static routes first (O(1))
+    const staticKey = `${request.method}:${url.pathname}`;
+    const staticRoute = this.staticRoutes.get(staticKey);
+    if (staticRoute) return staticRoute;
+
+    // Search dynamic routes for this method only
+    const dynamicRoutes = this.dynamicRoutesByMethod.get(request.method) ?? [];
+
+    return dynamicRoutes.find((route) => {
       return route.pattern.test(request.url);
     }) ?? null;
   }

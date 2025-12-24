@@ -1,3 +1,4 @@
+import HttpMethod from "./enums/http-method.ts";
 import type { Params } from "./interfaces/params.ts";
 import type { RouteOptions } from "./interfaces/route-options.ts";
 
@@ -34,7 +35,7 @@ export default class Route {
   constructor(options: RouteOptions) {
     this.options = {
       ...{
-        method: "GET",
+        method: HttpMethod.GET,
       },
       ...options,
     };
@@ -43,19 +44,23 @@ export default class Route {
       pathname: options.pathname,
     });
 
-    if (options.pathname.includes(":")) {
+    const hasParams = options.pathname.includes(':');
+    const hasWildcard = options.pathname.includes('*');
+
+    if (hasParams || hasWildcard) {
       const segments: string[] = [];
 
-      const regexPattern = options.pathname.replace(
-        /\/:([^\/]+)/g,
-        (_match, name) => {
+      const regexPattern = options.pathname
+        .replace(/\/:([^\/]+)/g, (_match, name) => {
           segments.push(name);
           return "/([^/]+)";
-        },
-      );
+        })
+        .replace(/\/\*/g, () => {
+          segments.push('*');
+          return "(/.*)?";
+        });
 
       this.paramRegex = new RegExp(`^${regexPattern}$`);
-
       this.paramNames = segments;
     }
   }
@@ -72,6 +77,7 @@ export default class Route {
     }
 
     const urlObj = new URL(url);
+
     const match = urlObj.pathname.match(this.paramRegex);
 
     if (!match) return {};
@@ -79,7 +85,15 @@ export default class Route {
     const params: Params = {};
 
     this.paramNames.forEach((name, index) => {
-      params[name] = match[index + 1];
+      const value = match[index + 1];
+
+      if (name === '*') {
+        params['*'] = value?.replace(/^\//, '') || '';
+
+        return;
+      }
+
+      params[name] = value;
     });
 
     return params;
