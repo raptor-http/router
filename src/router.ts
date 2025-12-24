@@ -133,12 +133,11 @@ export default class Router {
   private getRouteFromRequest(request: Request): Route | null {
     const url = new URL(request.url);
 
-    // Try static routes first (O(1))
     const staticKey = `${request.method}:${url.pathname}`;
     const staticRoute = this.staticRoutes.get(staticKey);
+
     if (staticRoute) return staticRoute;
 
-    // Search dynamic routes for this method only
     const dynamicRoutes = this.dynamicRoutesByMethod.get(request.method) ?? [];
 
     return dynamicRoutes.find((route) => {
