@@ -41,7 +41,8 @@ export default class Router {
       : [route.options.method];
 
     // Is the route static?
-    const isStatic = !route.options.pathname.includes(":");
+    const isStatic = !route.options.pathname.includes(":") &&
+      !route.options.pathname.includes("*");
 
     // Run through each method and register route.
     methods.forEach((method) => {
