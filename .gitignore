@@ -1,3 +1,6 @@
 # Ignore generated coverage files.
 coverage-report
 .vscode
+
+# Ignore benchmark files.
+benchmarks

@@ -1,5 +1,4 @@
 import type Route from "./route.ts";
-import RouteContext from "./route-context.ts";
 import { type Context, NotFound } from "@raptor/framework";
 
 export default class Router {
@@ -22,7 +21,6 @@ export default class Router {
   public add(routes: Route | Route[]): void {
     if (Array.isArray(routes)) {
       this.addRoutes(routes);
-
       return;
     }
 
@@ -35,22 +33,17 @@ export default class Router {
    * @param route A single route definition.
    */
   public addRoute(route: Route): void {
-    // Are we dealing with a multi-method route?
     const methods = Array.isArray(route.options.method)
       ? route.options.method
       : [route.options.method];
 
-    // Is the route static?
     const isStatic = !route.options.pathname.includes(":") &&
       !route.options.pathname.includes("*");
 
-    // Run through each method and register route.
     methods.forEach((method) => {
       if (isStatic) {
         const key = `${method}:${route.options.pathname}`;
-
         this.staticRoutes.set(key, route);
-
         return;
       }
 
@@ -79,61 +72,40 @@ export default class Router {
    * @throws {NotFound | TypeError}
    */
   public handle(context: Context): unknown {
-    // Establish a new context from the base.
-    const routeContext = new RouteContext(
-      context.request,
-      context.response,
-    );
+    const { request } = context;
 
-    const { request } = routeContext;
+    const url = new URL(request.url);
 
-    // Attempt to match a route from the request.
-    const route = this.getRouteFromRequest(request);
+    const route = this.getRouteFromRequest(request, url);
 
-    // If no matches were found or the method is incorrect, throw.
-    if (!route || !this.isValidHttpMethod(request, route)) {
+    if (!route) {
       throw new NotFound();
     }
 
-    // Pass the route parameters to the route context.
-    routeContext.params = route.extractParams(request.url);
+    // Initialize params if it doesn't exist
+    if (!context.params) {
+      context.params = {};
+    }
 
-    // If no handler function exists on route, throw.
+    // Extract and assign params
+    context.params = route.extractParams(url);
+
     if (typeof route.options.handler !== "function") {
       throw new TypeError("No handler function was provided for route");
     }
 
-    return route.options.handler(routeContext);
-  }
-
-  /**
-   * Check the validity of the current HTTP method against the route options.
-   *
-   * @param request The current HTTP request object.
-   * @param route The current matched route.
-   * @returns The validity of the current HTTP method.
-   */
-  private isValidHttpMethod(request: Request, route: Route): boolean {
-    if (request.method === route.options.method) {
-      return true;
-    }
-
-    if (Object.values(route.options.method).includes(request.method)) {
-      return true;
-    }
-
-    return false;
+    return route.options.handler(context);
   }
 
   /**
    * Get a matching route from the request.
    *
    * @param request The current http request.
+   * @param url The current request URL.
+   *
    * @returns A matched route definition.
    */
-  private getRouteFromRequest(request: Request): Route | null {
-    const url = new URL(request.url);
-
+  private getRouteFromRequest(request: Request, url: URL): Route | null {
     const staticKey = `${request.method}:${url.pathname}`;
     const staticRoute = this.staticRoutes.get(staticKey);
 

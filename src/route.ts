@@ -71,14 +71,12 @@ export default class Route {
    * @param url The URL to extract parameters from.
    * @returns The extracted parameters.
    */
-  public extractParams(url: string): Params {
+  public extractParams(url: URL): Params {
     if (!this.paramRegex || !this.paramNames || this.paramNames.length === 0) {
       return {};
     }
 
-    const urlObj = new URL(url);
-
-    const match = urlObj.pathname.match(this.paramRegex);
+    const match = url.pathname.match(this.paramRegex);
 
     if (!match) return {};
 
