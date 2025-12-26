@@ -4,6 +4,3 @@ coverage-report
 
 # Ignore benchmark files.
 benchmarks
-
-# Ignore types file.
-types.d.ts
