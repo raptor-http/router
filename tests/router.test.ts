@@ -1,5 +1,3 @@
-import "../src/types.ts";
-
 import Route from "../src/route.ts";
 import Router from "../src/router.ts";
 import { assertEquals } from "@std/assert";
