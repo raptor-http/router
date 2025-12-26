@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "@raptor/framework": "./src/framework-types.ts"
+  }
+}

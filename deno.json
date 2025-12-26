@@ -21,7 +21,7 @@
   },
   "lock": true,
   "peerDependencies": {
-    "@raptor/framework": "^0.13.0"
+    "@raptor/framework": "*"
   },
   "imports": {
     "@raptor/framework": "jsr:@raptor/framework@^0.13.0",
