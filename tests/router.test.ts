@@ -3,7 +3,7 @@ import "../src/types.ts";
 import Route from "../src/route.ts";
 import Router from "../src/router.ts";
 import { assertEquals } from "@std/assert";
-import { Kernel, type Context } from "@raptor/framework";
+import { type Context, Kernel } from "@raptor/framework";
 import { HttpMethod } from "../src/enums/http-method.ts";
 
 const APP_URL = "http://localhost:8000";
