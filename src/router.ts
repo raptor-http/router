@@ -114,6 +114,10 @@ export default class Router {
     const dynamicRoutes = this.dynamicRoutesByMethod.get(request.method) ?? [];
 
     return dynamicRoutes.find((route) => {
+      if (route.paramRegex) {
+        return route.paramRegex.test(url.pathname);
+      }
+
       return route.pattern.test(request.url);
     }) ?? null;
   }
