@@ -1,7 +1,5 @@
 // Copyright 2025, @briward. All rights reserved. MIT license.
 
-import "./src/types.ts";
-
 import Route from "./src/route.ts";
 import Router from "./src/router.ts";
 import { HttpMethod } from "./src/enums/http-method.ts";
