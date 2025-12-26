@@ -1,7 +1,7 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@raptor/framework@0.13": "0.13.0",
+    "jsr:@raptor/framework@*": "0.13.0",
     "jsr:@std/assert@^1.0.16": "1.0.16",
     "jsr:@std/internal@^1.0.12": "1.0.12"
   },
@@ -21,7 +21,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@raptor/framework@0.13",
+      "jsr:@raptor/framework@*",
       "jsr:@std/assert@^1.0.16"
     ]
   }
