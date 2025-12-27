@@ -76,6 +76,11 @@ export default class Route {
       return {};
     }
 
+    // Validate pathname length is sensible before processing.
+    if (url.pathname.length > 2048) {
+      return {};
+    }
+
     const match = url.pathname.match(this.paramRegex);
 
     if (!match) return {};

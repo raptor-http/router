@@ -74,7 +74,13 @@ export default class Router {
   public handle(context: Context): unknown {
     const { request } = context;
 
-    const url = new URL(request.url);
+    let url: URL;
+  
+    try {
+      url = new URL(request.url);
+    } catch {
+      throw new NotFound();
+    }
 
     const route = this.getRouteFromRequest(request, url);
 
@@ -82,7 +88,7 @@ export default class Router {
       throw new NotFound();
     }
 
-    // Initialize params if it doesn't exist
+    // Initialize params if it doesn't exist.
     if (!context.params) {
       context.params = {};
     }
