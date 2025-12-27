@@ -75,7 +75,7 @@ export default class Router {
     const { request } = context;
 
     let url: URL;
-  
+
     try {
       url = new URL(request.url);
     } catch {
