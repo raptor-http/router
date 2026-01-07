@@ -71,7 +71,7 @@ export default class Router {
    * @returns An unknown data type.
    * @throws {NotFound | TypeError}
    */
-  public async handle(context: Context): Promise<unknown> {
+  public handle(context: Context): Promise<unknown> {
     const { request } = context;
 
     let url: URL;
@@ -100,33 +100,40 @@ export default class Router {
       throw new TypeError("No handler function was provided for route");
     }
 
-    // Handle any defined route middleware functions.
-    await this.handleRouteMiddleware(route, context);
-
-    return route.options.handler(context);
+    // Excute the route's middleware, then finally the handler.
+    return this.executeRouteMiddleware(route, context, 0);
   }
 
   /**
-   * Handle route middleware functions.
+   * Execute route middleware with next() callback pattern.
    *
-   * @param route The route to check for middleware.
+   * @param route The route being processed.
    * @param context The context from the request.
-   * @returns void
+   * @param index Current middleware index.
+   * @returns The response from handler or middleware.
    */
-  private async handleRouteMiddleware(route: Route, context: Context) {
-    const middleware = route.options.middleware;
+  private executeRouteMiddleware(
+    route: Route,
+    context: Context,
+    index: number,
+  ): Promise<unknown> {
+    const config = route.options.middleware;
 
-    if (!middleware) return;
+    // Simplify by always using an array.
+    const middleware = !config ? [] : Array.isArray(config) ? config : [config];
 
-    if (Array.isArray(middleware) && middleware?.length) {
-      for (let i = 0; i < middleware.length; i++) {
-        await middleware[i](context);
-      }
+    // If we've executed all middleware, call the route handler.
+    if (index >= middleware.length) {
+      return Promise.resolve(route.options.handler(context));
     }
 
-    if (typeof middleware === "function") {
-      await middleware(context);
-    }
+    const current = middleware[index];
+
+    const next = (): Promise<unknown> => {
+      return this.executeRouteMiddleware(route, context, index + 1);
+    };
+
+    return Promise.resolve(current(context, next));
   }
 
   /**
