@@ -71,7 +71,7 @@ export default class Router {
    * @returns An unknown data type.
    * @throws {NotFound | TypeError}
    */
-  public handle(context: Context): unknown {
+  public async handle(context: Context): Promise<unknown> {
     const { request } = context;
 
     let url: URL;
@@ -93,14 +93,40 @@ export default class Router {
       context.params = {};
     }
 
-    // Extract and assign params
+    // Extract and assign params.
     context.params = route.extractParams(url);
 
     if (typeof route.options.handler !== "function") {
       throw new TypeError("No handler function was provided for route");
     }
 
+    // Handle any defined route middleware functions.
+    await this.handleRouteMiddleware(route, context);
+
     return route.options.handler(context);
+  }
+
+  /**
+   * Handle route middleware functions.
+   *
+   * @param route The route to check for middleware.
+   * @param context The context from the request.
+   * @returns void
+   */
+  private async handleRouteMiddleware(route: Route, context: Context) {
+    const middleware = route.options.middleware;
+
+    if (!middleware) return;
+
+    if (Array.isArray(middleware) && middleware?.length) {
+      for (let i = 0; i < middleware.length; i++) {
+        await middleware[i](context);
+      }
+    }
+
+    if (typeof middleware === "function") {
+      await middleware(context);
+    }
   }
 
   /**

@@ -1,4 +1,6 @@
 import type HttpMethod from "../enums/http-method.ts";
+import type { RouteHandler } from "./route-handler.ts";
+import type { RouteMiddleware } from "./route-middleware.ts";
 
 /**
  * The route options definition.
@@ -20,7 +22,12 @@ export interface RouteOptions {
   method: HttpMethod | HttpMethod[];
 
   /**
+   * Optional middleware for the route.
+   */
+  middleware?: RouteMiddleware | RouteMiddleware[];
+
+  /**
    * The handler function when processing the route.
    */
-  handler: CallableFunction;
+  handler: RouteHandler;
 }
