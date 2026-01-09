@@ -23,6 +23,12 @@ To start using the router, simply install into an existing Raptor application vi
 deno add jsr:@raptor/router
 ```
 
+#### Using NPM
+
+```
+npm install @raptor-http/router
+```
+
 #### Importing with JSR
 
 Raptor is also available to import directly via JSR:
