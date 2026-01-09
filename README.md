@@ -11,28 +11,11 @@
 
 ## Raptor Router
 
-See more information about the Raptor framework here: <a href="https://jsr.io/@raptor/framework">https://jsr.io/@raptor/framework</a>.
+See more information about the Raptor framework here: <a href="https://raptorframework.com">https://raptorframework.com</a>.
 
 ### Installation
 
-To start using the router, simply install into an existing Raptor application via the CLI or import it directly from JSR.
-
-#### Using the Deno CLI
-
-```
-deno add jsr:@raptor/router
-```
-
-#### Using NPM
-
-```
-npm install @raptor-http/router
-```
-
-#### Importing with JSR
-
-Raptor is also available to import directly via JSR:
-[https://jsr.io/@raptor/router](https://jsr.io/@raptor/router)
+For installation instructions, please visit <a href="https://raptorframework.com/docs/extensions/router">https://raptorframework.com/docs/extensions/router</a>
 
 ## Documentation
 
