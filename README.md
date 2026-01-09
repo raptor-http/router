@@ -13,7 +13,7 @@
 
 See more information about the Raptor framework here: <a href="https://raptorframework.com">https://raptorframework.com</a>.
 
-### Installation
+## Installation
 
 For installation instructions, please visit <a href="https://raptorframework.com/docs/extensions/router">https://raptorframework.com/docs/extensions/router</a>
 
