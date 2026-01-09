@@ -4,3 +4,9 @@ coverage-report
 
 # Ignore benchmark files.
 benchmarks
+
+# Ignore built dependencies.
+node_modules
+
+# Ignore example directories.
+example

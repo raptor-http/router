@@ -7,6 +7,5 @@ import { HttpMethod } from "./src/enums/http-method.ts";
 export type { Params } from "./src/interfaces/params.ts";
 export type { RouteHandler } from "./src/interfaces/route-handler.ts";
 export type { RouteOptions } from "./src/interfaces/route-options.ts";
-export type { RouteMiddleware } from "./src/interfaces/route-middleware.ts";
 
 export { HttpMethod, Route, Router };

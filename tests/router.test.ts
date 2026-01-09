@@ -3,6 +3,7 @@ import Router from "../src/router.ts";
 import { assertEquals } from "@std/assert";
 import { type Context, Kernel } from "@raptor/framework";
 import { HttpMethod } from "../src/enums/http-method.ts";
+import type { Params } from "../src/interfaces/params.ts";
 
 const APP_URL = "http://localhost:8000";
 
@@ -259,4 +260,62 @@ Deno.test("test wildcard route", async () => {
   );
 
   assertEquals(await response.json(), { matched: "wildcard" });
+});
+
+Deno.test("router handles oversized pathnames gracefully", async () => {
+  const kernel = new Kernel();
+  const router = new Router();
+
+  let params: Params | undefined;
+
+  const route = new Route({
+    pathname: "/users/:id",
+    method: HttpMethod.GET,
+    handler: (context: Context) => {
+      params = context.params;
+
+      return "processed";
+    },
+  });
+
+  router.add(route);
+
+  kernel.add((context: Context) => router.handle(context));
+
+  const oversizedId = "x".repeat(2050);
+
+  await kernel.respond(
+    new Request(`${APP_URL}/users/${oversizedId}`),
+  );
+
+  assertEquals(params, {});
+});
+
+Deno.test("test route middleware", async () => {
+  const kernel = new Kernel();
+  const router = new Router();
+
+  const route = new Route({
+    name: "docs",
+    pathname: "/test",
+    method: HttpMethod.GET,
+    middleware: (context: Context, next: CallableFunction) => {
+      context.response.headers.set("Content-Type", "application/hal+json");
+
+      return next();
+    },
+    handler: () => ({
+      hello: "World",
+    }),
+  });
+
+  router.add(route);
+
+  kernel.add((context: Context) => router.handle(context));
+
+  const response = await kernel.respond(
+    new Request(`${APP_URL}/test`),
+  );
+
+  assertEquals(response.headers.get("Content-Type"), "application/hal+json");
 });

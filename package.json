@@ -1,0 +1,48 @@
+{
+  "name": "@raptor-http/router",
+  "version": "0.13.0",
+  "type": "module",
+  "description": "The first-party router middleware for Raptor.",
+  "exports": "./mod.ts",
+  "files": [
+    "mod.ts",
+    "src/**/*.ts",
+    "!src/**/*.test.ts"
+  ],
+  "keywords": [
+    "framework",
+    "middleware",
+    "http",
+    "deno",
+    "bun",
+    "nodejs",
+    "web-framework",
+    "router"
+  ],
+  "author": "Bri Ward",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raptor-http/router.git"
+  },
+  "homepage": "https://github.com/raptor-http/router#readme",
+  "bugs": {
+    "url": "https://github.com/raptor-http/router/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "tsx": "^4.21.0",
+    "urlpattern-polyfill": "^10.1.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "private": true,
+  "dependencies": {
+    "@raptor/framework": "npm:@raptor-http/framework@^0.14.3",
+    "mitata": "^1.0.34"
+  }
+}
