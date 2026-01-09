@@ -23,5 +23,4 @@ Full documentation can be found on [https://raptorframework.com/docs](https://ra
 
 ## License
 
-_Copyright 2025, @briward. All rights reserved. The framework is licensed under
-the MIT license._
+The Raptor is licensed under the MIT license.
