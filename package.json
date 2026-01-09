@@ -40,7 +40,6 @@
   "peerDependencies": {
     "typescript": "^5"
   },
-  "private": true,
   "dependencies": {
     "@raptor/framework": "npm:@raptor-http/framework@^0.14.3",
     "mitata": "^1.0.34"
