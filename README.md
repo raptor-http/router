@@ -23,4 +23,4 @@ Full documentation can be found on [https://raptorframework.com/docs](https://ra
 
 ## License
 
-The Raptor is licensed under the MIT license.
+The Raptor framework is licensed under the MIT license.
