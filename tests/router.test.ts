@@ -137,7 +137,7 @@ Deno.test("test context contains route params", async () => {
       context.response.headers.set("content-type", "application/json");
 
       return {
-        id: context.params.id,
+        id: context.request.params.id,
       };
     },
   });
@@ -186,8 +186,8 @@ Deno.test("test dynamic route with params", async () => {
     pathname: "/users/:id/posts/:postId",
     method: HttpMethod.GET,
     handler: (context: Context) => ({
-      userId: context.params.id,
-      postId: context.params.postId,
+      userId: context.request.params.id,
+      postId: context.request.params.postId,
     }),
   });
 
@@ -272,7 +272,7 @@ Deno.test("router handles oversized pathnames gracefully", async () => {
     pathname: "/users/:id",
     method: HttpMethod.GET,
     handler: (context: Context) => {
-      params = context.params;
+      params = context.request.params;
 
       return "processed";
     },

@@ -1,4 +1,4 @@
-// Copyright 2025, @briward. All rights reserved. MIT license.
+// Copyright 2026, @briward. All rights reserved. MIT license.
 
 import Route from "./src/route.ts";
 import Router from "./src/router.ts";

@@ -1,7 +1,7 @@
 import type { Params } from "@raptor/router";
 
-declare module "@raptor/framework" {
-  interface Context {
+declare global {
+  interface Request {
     params: Params;
   }
 }

@@ -67,7 +67,9 @@
       "dependencies": [
         "npm:@raptor-http/framework@~0.14.3",
         "npm:@types/bun@latest",
-        "npm:mitata@^1.0.34"
+        "npm:mitata@^1.0.34",
+        "npm:tsx@^4.21.0",
+        "npm:urlpattern-polyfill@^10.1.0"
       ]
     }
   }

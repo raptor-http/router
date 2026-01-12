@@ -89,12 +89,12 @@ export default class Router {
     }
 
     // Initialize params if it doesn't exist.
-    if (!context.params) {
-      context.params = {};
+    if (!context.request.params) {
+      context.request.params = {};
     }
 
     // Extract and assign params.
-    context.params = route.extractParams(url);
+    context.request.params = route.extractParams(url);
 
     if (typeof route.options.handler !== "function") {
       throw new TypeError("No handler function was provided for route");
