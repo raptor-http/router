@@ -2,7 +2,11 @@
 
 Thank you for your interest in contributing to the Raptor ecosystem!
 
-This package is part of the [Raptor Framework](https://github.com/raptor-http/framework) project. Please see the main [framework contributing documentation](https://github.com/raptor-http/framework/blob/main/CONTRIBUTING.md) for guidelines on:
+This package is part of the
+[Raptor Framework](https://github.com/raptor-http/framework) project. Please see
+the main framework
+[contributing documentation](https://github.com/raptor-http/framework/blob/main/CONTRIBUTING.md)
+for guidelines on:
 
 - Reporting issues
 - Submitting pull requests
@@ -10,7 +14,8 @@ This package is part of the [Raptor Framework](https://github.com/raptor-http/fr
 - Development setup
 - Running tests
 
-All contributions to Raptor packages follow the same guidelines and processes outlined in the main repository.
+All contributions to Raptor packages follow the same guidelines and processes
+outlined in the main repository.
 
 ## Quick Links
 
