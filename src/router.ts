@@ -1,5 +1,6 @@
-import type Route from "./route.ts";
 import { type Context, NotFound } from "@raptor/framework";
+
+import type Route from "./route.ts";
 
 export default class Router {
   /**
@@ -42,8 +43,10 @@ export default class Router {
 
     methods.forEach((method) => {
       if (isStatic) {
-        const key = `${method}:${route.options.pathname}`;
+        const key = method + ":" + route.options.pathname;
+
         this.staticRoutes.set(key, route);
+
         return;
       }
 
@@ -74,6 +77,21 @@ export default class Router {
   public handle(context: Context): Promise<unknown> {
     const { request } = context;
 
+    const pathname = this.getPathnameFromUrl(request.url);
+
+    // Determine if the route is static.
+    const staticKey = request.method + ":" + pathname;
+    const staticRoute = this.staticRoutes.get(staticKey);
+
+    if (staticRoute) {
+      if (typeof staticRoute.options.handler !== "function") {
+        throw new TypeError("No handler function was provided for route");
+      }
+
+      return this.executeRouteMiddleware(staticRoute, context, 0);
+    }
+
+    // Must be a dynamic route.
     let url: URL;
 
     try {
@@ -88,19 +106,15 @@ export default class Router {
       throw new NotFound();
     }
 
-    // Initialize params if it doesn't exist.
-    if (!context.request.params) {
-      context.request.params = {};
+    if (route.paramNames && route.paramNames.length > 0) {
+      context.request.params = route.extractParams(url);
     }
-
-    // Extract and assign params.
-    context.request.params = route.extractParams(url);
 
     if (typeof route.options.handler !== "function") {
       throw new TypeError("No handler function was provided for route");
     }
 
-    // Excute the route's middleware, then finally the handler.
+    // Execute the route's middleware, then finally the handler.
     return this.executeRouteMiddleware(route, context, 0);
   }
 
@@ -145,11 +159,6 @@ export default class Router {
    * @returns A matched route definition.
    */
   private getRouteFromRequest(request: Request, url: URL): Route | null {
-    const staticKey = `${request.method}:${url.pathname}`;
-    const staticRoute = this.staticRoutes.get(staticKey);
-
-    if (staticRoute) return staticRoute;
-
     const dynamicRoutes = this.dynamicRoutesByMethod.get(request.method) ?? [];
 
     return dynamicRoutes.find((route) => {
@@ -159,5 +168,34 @@ export default class Router {
 
       return route.pattern.test(request.url);
     }) ?? null;
+  }
+
+  /**
+   * Get the pathname from the URL.
+   *
+   * @param url The URL of the request.
+   * @returns The pathname extracted from the URL.
+   */
+  private getPathnameFromUrl(url: string): string {
+    const pathStart = url.indexOf("/", 8);
+
+    if (pathStart === -1) {
+      throw new NotFound();
+    }
+
+    const queryStart = url.indexOf("?", pathStart);
+    const hashStart = url.indexOf("#", pathStart);
+
+    let pathEnd = url.length;
+
+    if (queryStart !== -1) {
+      pathEnd = queryStart;
+    }
+
+    if (hashStart !== -1 && hashStart < pathEnd) {
+      pathEnd = hashStart;
+    }
+
+    return url.substring(pathStart, pathEnd);
   }
 }
