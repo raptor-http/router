@@ -69,7 +69,7 @@ body:
         const app = new Kernel();
 
         const router = new Router();
-        
+
         // Your reproduction code here
       render: typescript
     validations:
