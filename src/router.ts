@@ -1,6 +1,8 @@
 import { type Context, NotFound } from "@raptor/framework";
 
 import type Route from "./route.ts";
+import type RouteGroup from "./route-group.ts";
+import normalisePath from "./utilities/normalise-path.ts";
 
 export default class Router {
   /**
@@ -16,16 +18,35 @@ export default class Router {
   /**
    * Add one or more routes to the router.
    *
-   * @param routes One or many routes.
+   * @param routes One or many routes, either directly or via group(s).
    * @returns void
    */
-  public add(routes: Route | Route[]): void {
-    if (Array.isArray(routes)) {
-      this.addRoutes(routes);
+  public add(routes: Route | RouteGroup | Route[] | RouteGroup[]): void {
+    if (Array.isArray(routes) && this.isRoute(routes[0])) {
+      this.addRoutes(routes as Route[]);
+
       return;
     }
 
-    this.addRoute(routes);
+    if (Array.isArray(routes) && this.isRouteGroup(routes[0])) {
+      this.addRouteGroups(routes as RouteGroup[]);
+
+      return;
+    }
+
+    if (Array.isArray(routes)) {
+      return;
+    }
+
+    if (this.isRoute(routes)) {
+      this.addRoute(routes as Route);
+
+      return;
+    }
+
+    if (this.isRouteGroup(routes)) {
+      this.addRouteGroup(routes as RouteGroup);
+    }
   }
 
   /**
@@ -34,16 +55,15 @@ export default class Router {
    * @param route A single route definition.
    */
   public addRoute(route: Route): void {
-    const methods = Array.isArray(route.options.method)
-      ? route.options.method
-      : [route.options.method];
+    const { method, pathname } = route.options;
 
-    const isStatic = !route.options.pathname.includes(":") &&
-      !route.options.pathname.includes("*");
+    const methods = Array.isArray(method) ? method : [method];
+
+    const isStatic = !pathname.includes(":") && !pathname.includes("*");
 
     methods.forEach((method) => {
       if (isStatic) {
-        const key = method + ":" + route.options.pathname;
+        const key = method + ":" + pathname;
 
         this.staticRoutes.set(key, route);
 
@@ -65,6 +85,26 @@ export default class Router {
    */
   public addRoutes(routes: Route[]): void {
     routes.forEach((route) => this.addRoute(route));
+  }
+
+  /**
+   * Add a single route group to the router.
+   *
+   * @param group A single group route definition.
+   */
+  public addRouteGroup(group: RouteGroup): void {
+    const { routes } = group;
+
+    this.addRoutes(routes);
+  }
+
+  /**
+   * Add one or more route groups to the router.
+   *
+   * @param groups One or more route definitions.
+   */
+  public addRouteGroups(groups: RouteGroup[]): void {
+    groups.forEach((group) => this.addRouteGroup(group));
   }
 
   /**
@@ -116,6 +156,26 @@ export default class Router {
 
     // Execute the route's middleware, then finally the handler.
     return this.executeRouteMiddleware(route, context, 0);
+  }
+
+  /**
+   * Check if an object is a route.
+   *
+   * @param item A route or route group.
+   * @returns Whether the argument is a route object.
+   */
+  private isRoute(item: Route | RouteGroup): boolean {
+    return 'method' in item.options;
+  }
+
+  /**
+   * Check if an object is a route group.
+   *
+   * @param item A route or route group.
+   * @returns Whether the argument is a route group object.
+   */
+  private isRouteGroup(item: Route | RouteGroup): boolean {
+    return 'routes' in item;
   }
 
   /**
@@ -196,6 +256,6 @@ export default class Router {
       pathEnd = hashStart;
     }
 
-    return url.substring(pathStart, pathEnd);
+    return normalisePath(url.substring(pathStart, pathEnd));
   }
 }

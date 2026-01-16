@@ -34,34 +34,14 @@ export default class Route {
    */
   constructor(options: RouteOptions) {
     this.options = {
-      ...{
-        method: HttpMethod.GET,
-      },
       ...options,
+      method: HttpMethod.GET,
     };
 
-    this.pattern = new URLPattern({
-      pathname: options.pathname,
-    });
-
-    const hasParams = options.pathname.includes(":");
-    const hasWildcard = options.pathname.includes("*");
-
-    if (hasParams || hasWildcard) {
-      const segments: string[] = [];
-
-      const regexPattern = options.pathname
-        .replace(/\/:([^\/]+)/g, (_match, name) => {
-          segments.push(name);
-          return "/([^/]+)";
-        })
-        .replace(/\/\*/g, () => {
-          segments.push("*");
-          return "(/.*)?";
-        });
-
-      this.paramRegex = new RegExp(`^${regexPattern}$`);
-      this.paramNames = segments;
+    this.pattern = this.buildPattern();
+    
+    if (this.hasDynamicSegments()) {
+      this.buildParamRegex();
     }
   }
 
@@ -76,14 +56,11 @@ export default class Route {
       return {};
     }
 
-    // Validate pathname length is sensible before processing.
-    if (url.pathname.length > 2048) {
-      return {};
-    }
-
     const match = url.pathname.match(this.paramRegex);
 
-    if (!match) return {};
+    if (!match) {
+      return {};
+    }
 
     const params: Params = {};
 
@@ -92,7 +69,6 @@ export default class Route {
 
       if (name === "*") {
         params["*"] = value?.replace(/^\//, "") || "";
-
         return;
       }
 
@@ -100,5 +76,45 @@ export default class Route {
     });
 
     return params;
+  }
+
+  /**
+   * Check if the route has dynamic segments (params or wildcards).
+   *
+   * @returns Boolean indicating whether the route has dynamic segments.
+   */
+  private hasDynamicSegments(): boolean {
+    return this.options.pathname.includes(":") || this.options.pathname.includes("*");
+  }
+
+  /**
+   * Build the URL pattern for this route.
+   *
+   * @returns The compiled URL pattern.
+   */
+  private buildPattern(): URLPattern {
+    return new URLPattern({
+      pathname: this.options.pathname,
+    });
+  }
+
+  /**
+   * Build the param regex and param names for dynamic routes.
+   */
+  private buildParamRegex(): void {
+    const segments: string[] = [];
+
+    const regexPattern = this.options.pathname
+      .replace(/\/:([^\/]+)/g, (_match, name) => {
+        segments.push(name);
+        return "/([^/]+)";
+      })
+      .replace(/\/\*/g, () => {
+        segments.push("*");
+        return "(/.*)?";
+      });
+
+    this.paramRegex = new RegExp(`^${regexPattern}$`);
+    this.paramNames = segments;
   }
 }
