@@ -214,7 +214,7 @@ Deno.test("test route with multiple HTTP methods", async () => {
     pathname: "/api/resource",
     method: [
       HttpMethod.GET,
-      HttpMethod.POST
+      HttpMethod.POST,
     ],
     handler: (context: Context) => ({
       method: context.request.method,
@@ -309,8 +309,8 @@ Deno.test("test route group without middleware", async () => {
       pathname: "/",
       method: HttpMethod.GET,
       handler: () => ({ success: true }),
-    })
-  ])
+    }),
+  ]);
 
   router.add(group);
 
@@ -334,7 +334,7 @@ Deno.test("test route group with one middleware", async () => {
       context.response.headers.set("Content-Type", "application/hal+json");
 
       return next();
-    }
+    },
   });
 
   group.add([
@@ -343,8 +343,8 @@ Deno.test("test route group with one middleware", async () => {
       pathname: "/",
       method: HttpMethod.GET,
       handler: () => ({ success: true }),
-    })
-  ])
+    }),
+  ]);
 
   router.add(group);
 
@@ -374,8 +374,8 @@ Deno.test("test route group with multiple middleware", async () => {
         context.response.headers.set("Content-Type", "application/custom+json");
 
         return next();
-      }
-    ]
+      },
+    ],
   });
 
   group.add([
@@ -384,8 +384,8 @@ Deno.test("test route group with multiple middleware", async () => {
       pathname: "/",
       method: HttpMethod.GET,
       handler: () => ({ success: true }),
-    })
-  ])
+    }),
+  ]);
 
   router.add(group);
 

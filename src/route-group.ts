@@ -50,7 +50,9 @@ export default class RouteGroup {
       const normalised = Array.isArray(middleware) ? middleware : [middleware];
 
       const routeMiddleware = route.options.middleware
-        ? (Array.isArray(route.options.middleware) ? route.options.middleware : [route.options.middleware])
+        ? (Array.isArray(route.options.middleware)
+          ? route.options.middleware
+          : [route.options.middleware])
         : [];
 
       route.options.middleware = [

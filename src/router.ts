@@ -165,7 +165,7 @@ export default class Router {
    * @returns Whether the argument is a route object.
    */
   private isRoute(item: Route | RouteGroup): boolean {
-    return 'method' in item.options;
+    return "method" in item.options;
   }
 
   /**
@@ -175,7 +175,7 @@ export default class Router {
    * @returns Whether the argument is a route group object.
    */
   private isRouteGroup(item: Route | RouteGroup): boolean {
-    return 'routes' in item;
+    return "routes" in item;
   }
 
   /**

@@ -86,7 +86,8 @@ export default class Route {
    * @returns Boolean indicating whether the route has dynamic segments.
    */
   private hasDynamicSegments(): boolean {
-    return this.options.pathname.includes(":") || this.options.pathname.includes("*");
+    return this.options.pathname.includes(":") ||
+      this.options.pathname.includes("*");
   }
 
   /**
