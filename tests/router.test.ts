@@ -212,7 +212,10 @@ Deno.test("test route with multiple HTTP methods", async () => {
   const route = new Route({
     name: "multi.method",
     pathname: "/api/resource",
-    method: [HttpMethod.GET, HttpMethod.POST],
+    method: [
+      HttpMethod.GET,
+      HttpMethod.POST
+    ],
     handler: (context: Context) => ({
       method: context.request.method,
     }),
@@ -291,25 +294,13 @@ Deno.test("test route middleware", async () => {
   assertEquals(response.headers.get("Content-Type"), "application/hal+json");
 });
 
-Deno.test("test route group can be added to router", async () => {
+Deno.test("test route group without middleware", async () => {
   const kernel = new Kernel();
   const router = new Router();
 
   const group = new RouteGroup({
     name: "api.",
     prefix: "/api",
-    middleware: [
-      (_context: Context, next: CallableFunction) => {
-        console.log("running first route group middleware!");
-
-        return next();
-      },
-      (_context: Context, next: CallableFunction) => {
-        console.log("running second route group middleware!");
-
-        return next();
-      }
-    ]
   });
 
   group.add([
@@ -317,11 +308,6 @@ Deno.test("test route group can be added to router", async () => {
       name: "index",
       pathname: "/",
       method: HttpMethod.GET,
-      middleware: (_context: Context, next: CallableFunction) => {
-        console.log("running first route middleware!");
-
-        return next();
-      },
       handler: () => ({ success: true }),
     })
   ])
@@ -335,4 +321,79 @@ Deno.test("test route group can be added to router", async () => {
   );
 
   assertEquals(await response.json(), { success: true });
+});
+
+Deno.test("test route group with one middleware", async () => {
+  const kernel = new Kernel();
+  const router = new Router();
+
+  const group = new RouteGroup({
+    name: "api.",
+    prefix: "/api",
+    middleware: (context: Context, next: CallableFunction) => {
+      context.response.headers.set("Content-Type", "application/hal+json");
+
+      return next();
+    }
+  });
+
+  group.add([
+    new Route({
+      name: "index",
+      pathname: "/",
+      method: HttpMethod.GET,
+      handler: () => ({ success: true }),
+    })
+  ])
+
+  router.add(group);
+
+  kernel.add((context: Context) => router.handle(context));
+
+  const response = await kernel.respond(
+    new Request(`${APP_URL}/api`),
+  );
+
+  assertEquals(response.headers.get("Content-Type"), "application/hal+json");
+});
+
+Deno.test("test route group with multiple middleware", async () => {
+  const kernel = new Kernel();
+  const router = new Router();
+
+  const group = new RouteGroup({
+    name: "api.",
+    prefix: "/api",
+    middleware: [
+      (context: Context, next: CallableFunction) => {
+        context.response.headers.set("Content-Type", "application/hal+json");
+
+        return next();
+      },
+      (context: Context, next: CallableFunction) => {
+        context.response.headers.set("Content-Type", "application/custom+json");
+
+        return next();
+      }
+    ]
+  });
+
+  group.add([
+    new Route({
+      name: "index",
+      pathname: "/",
+      method: HttpMethod.GET,
+      handler: () => ({ success: true }),
+    })
+  ])
+
+  router.add(group);
+
+  kernel.add((context: Context) => router.handle(context));
+
+  const response = await kernel.respond(
+    new Request(`${APP_URL}/api`),
+  );
+
+  assertEquals(response.headers.get("Content-Type"), "application/custom+json");
 });

@@ -34,12 +34,14 @@ export default class Route {
    */
   constructor(options: RouteOptions) {
     this.options = {
+      ...{
+        method: HttpMethod.GET,
+      },
       ...options,
-      method: HttpMethod.GET,
     };
 
     this.pattern = this.buildPattern();
-    
+
     if (this.hasDynamicSegments()) {
       this.buildParamRegex();
     }
