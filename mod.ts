@@ -2,10 +2,12 @@
 
 import Route from "./src/route.ts";
 import Router from "./src/router.ts";
+import RouteGroup from "./src/route-group.ts";
 import { HttpMethod } from "./src/enums/http-method.ts";
 
 export type { Params } from "./src/interfaces/params.ts";
 export type { RouteHandler } from "./src/interfaces/route-handler.ts";
 export type { RouteOptions } from "./src/interfaces/route-options.ts";
+export type { RouteGroupOptions } from "./src/interfaces/route-group-options.ts";
 
-export { HttpMethod, Route, Router };
+export { HttpMethod, Route, RouteGroup, Router };
