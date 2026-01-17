@@ -68,10 +68,12 @@ export default class Tree {
 
     for (const segment of segments) {
       const child = node.children.find((c) => {
+        // Do we have an exact pathname match for this segment?
         if (c.pathname === segment) {
           return true;
         }
 
+        // If we're dealing with a parameter.
         if (c.paramName) {
           params[c.paramName] = segment;
 
@@ -81,6 +83,7 @@ export default class Tree {
         return false;
       });
 
+      // If there's no children, handle wildcards.
       if (!child) {
         const wildcard = node.children.find((c) => c.isWildcard);
 
@@ -94,14 +97,15 @@ export default class Tree {
       node = child;
     }
 
-    if (node.handler) {
-      return {
-        handler: node.handler,
-        middleware: node.middleware,
-        params,
-      };
+    // If we have no handler, return no match.
+    if (!node.handler) {
+      return null;
     }
 
-    return null;
+    return {
+      handler: node.handler,
+      middleware: node.middleware,
+      params,
+    };
   }
 }

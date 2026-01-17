@@ -9,6 +9,16 @@ import type { TreeMatchResult } from "./interfaces/tree-match-result.ts";
 
 export default class Router {
   /**
+   * Internal cache for match results.
+   */
+  private cache = new Map<string, TreeMatchResult>();
+
+  /**
+   * Maximum cache size for the results.
+   */
+  private maxCacheSize = 1000;
+
+  /**
    * The available trees for the router, by method.
    */
   private trees: Map<HttpMethod, Tree> = new Map();
@@ -117,18 +127,35 @@ export default class Router {
 
     const pathname = this.getPathnameFromUrl(request.url);
 
-    const tree = this.trees
-      .get(HttpMethod[method as keyof typeof HttpMethod])!;
+    const cacheKey = `${method}:${pathname}`;
 
-    if (!tree) {
-      throw new NotFound();
+    let match;
+
+    // Check cache first for our route.
+    if (this.cache.has(cacheKey)) {
+      match = this.cache.get(cacheKey)!;
     }
 
-    const match = tree.match(pathname);
+    // If no cache hit, match with tree.
+    if (!this.cache.has(cacheKey)) {
+      match = this.trees
+        .get(HttpMethod[method as keyof typeof HttpMethod])
+        ?.match(pathname);
+    }
 
     if (!match) {
       throw new NotFound();
     }
+
+    // Clean up the cache if it's getting too large.
+    if (this.cache.size >= this.maxCacheSize) {
+      const firstKey = this.cache.keys().next().value;
+
+      this.cache.delete(firstKey as string);
+    }
+
+    // Cache the result for later.
+    this.cache.set(cacheKey, match);
 
     if (match.params) {
       context.request.params = match.params;
