@@ -1,4 +1,5 @@
 import type Route from "./route.ts";
+import type { Middleware } from "@raptor/framework";
 import type { TreeNode } from "./interfaces/tree-node.ts";
 import type { TreeMatchResult } from "./interfaces/tree-match-result.ts";
 
@@ -50,7 +51,10 @@ export default class Tree {
     }
 
     node.handler = route.options.handler;
-    node.middleware = route.options.middleware;
+
+    node.middleware = this.normaliseMiddleware(
+      route.options.middleware
+    );
   }
 
   /**
@@ -91,7 +95,11 @@ export default class Tree {
           return null;
         }
 
-        return wildcard ? { handler: wildcard.handler, params } : null;
+        return {
+          handler: wildcard.handler,
+          middleware: wildcard.middleware,
+          params
+        };
       }
 
       node = child;
@@ -107,5 +115,16 @@ export default class Tree {
       middleware: node.middleware,
       params,
     };
+  }
+
+  /**
+   * Normalise middleware by converting to an array regardless.
+   * 
+   * @param middleware One or more middleware.
+   *
+   * @returns An array of defined middleware.
+   */
+  private normaliseMiddleware(middleware?: Middleware | Middleware[]): Middleware[] | undefined {
+    return !middleware ? [] : Array.isArray(middleware) ? middleware : [middleware];
   }
 }

@@ -10,5 +10,5 @@ export type TreeNode = {
   isWildcard: boolean;
   paramName?: string;
   handler?: RouteHandler;
-  middleware?: Middleware | Middleware[];
+  middleware?: Middleware[];
 };

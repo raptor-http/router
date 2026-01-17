@@ -1,4 +1,5 @@
 import HttpMethod from "./enums/http-method.ts";
+import type { Middleware } from "@raptor/framework";
 import type { Params } from "./interfaces/params.ts";
 import type { RouteOptions } from "./interfaces/route-options.ts";
 

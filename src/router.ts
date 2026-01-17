@@ -157,13 +157,8 @@ export default class Router {
     // Cache the result for later.
     this.cache.set(cacheKey, match);
 
-    if (match.params) {
-      context.request.params = match.params;
-    }
-
-    if (typeof match.handler !== "function") {
-      throw new TypeError("No handler function was provided for route");
-    }
+    // Set the params as part of the context request object.
+    context.request.params = match.params;
 
     // Execute the route's middleware, then finally the handler.
     return this.executeRouteMiddleware(match, context, 0);
@@ -213,13 +208,10 @@ export default class Router {
     context: Context,
     index: number,
   ): Promise<unknown> {
-    const config = match.middleware;
-
-    // Simplify by always using an array.
-    const middleware = !config ? [] : Array.isArray(config) ? config : [config];
+    const middleware = match.middleware;
 
     // If we've executed all middleware, call the route handler.
-    if (index >= middleware.length) {
+    if (!middleware || index >= middleware.length) {
       return Promise.resolve(match.handler(context));
     }
 
