@@ -19,7 +19,7 @@ export interface RouteOptions {
   /**
    * The HTTP method allowed to the route.
    */
-  method: HttpMethod | HttpMethod[];
+  method?: HttpMethod | HttpMethod[];
 
   /**
    * Optional middleware for the route.
@@ -29,5 +29,5 @@ export interface RouteOptions {
   /**
    * The handler function when processing the route.
    */
-  handler: RouteHandler;
+  handler?: RouteHandler;
 }
