@@ -3,6 +3,9 @@ import type { TreeNode } from "./interfaces/tree-node.ts";
 import type { TreeMatchResult } from "./interfaces/tree-match-result.ts";
 
 export default class Tree {
+  /**
+   * The root node of the tree.
+   */
   private root: TreeNode = {
     pathname: "",
     children: [],
@@ -17,7 +20,7 @@ export default class Tree {
   public add(route: Route) {
     let node = this.root;
 
-    const segments = route.options.pathname.split('/').filter(s => s);
+    const segments = route.options.pathname.split("/").filter((s) => s);
 
     for (const segment of segments) {
       let child = node.children.find((c) => {
@@ -25,7 +28,7 @@ export default class Tree {
           return true;
         }
 
-        if (segment.startsWith(':') && c.paramName) {
+        if (segment.startsWith(":") && c.paramName) {
           return true;
         }
 
@@ -36,8 +39,8 @@ export default class Tree {
         child = {
           pathname: segment,
           children: [],
-          isWildcard: segment === '*',
-          paramName: segment.startsWith(':') ? segment.slice(1) : undefined
+          isWildcard: segment === "*",
+          paramName: segment.startsWith(":") ? segment.slice(1) : undefined,
         };
 
         node.children.push(child);
@@ -54,12 +57,12 @@ export default class Tree {
    * Match a tree node by path.
    *
    * @param path The path to match against tree nodes.
-   * @returns 
+   * @returns
    */
   public match(path: string): TreeMatchResult | null {
     let node = this.root;
 
-    const segments = path.split('/').filter((s) => s);
+    const segments = path.split("/").filter((s) => s);
 
     const params: Record<string, string> = {};
 

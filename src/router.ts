@@ -8,6 +8,9 @@ import normalisePath from "./utilities/normalise-path.ts";
 import type { TreeMatchResult } from "./interfaces/tree-match-result.ts";
 
 export default class Router {
+  /**
+   * The available trees for the router, by method.
+   */
   private trees: Map<HttpMethod, Tree> = new Map();
 
   /**
@@ -56,13 +59,19 @@ export default class Router {
       config = HttpMethod.GET;
     }
 
-    const method = HttpMethod[config as keyof typeof HttpMethod];
+    if (Array.isArray(config)) {
+      config.forEach((method) => {
+        this.createTreeForMethod(method);
 
-    if (!this.trees.has(method)) {
-      this.trees.set(method, new Tree());
+        this.trees.get(method)!.add(route);
+      });
+
+      return;
     }
 
-    this.trees.get(method)!.add(route);
+    this.createTreeForMethod(config);
+
+    this.trees.get(config)!.add(route);
   }
 
   /**
@@ -108,9 +117,14 @@ export default class Router {
 
     const pathname = this.getPathnameFromUrl(request.url);
 
-    const match = this.trees
-      .get(HttpMethod[method as keyof typeof HttpMethod])!
-      .match(pathname);
+    const tree = this.trees
+      .get(HttpMethod[method as keyof typeof HttpMethod])!;
+
+    if (!tree) {
+      throw new NotFound();
+    }
+
+    const match = tree.match(pathname);
 
     if (!match) {
       throw new NotFound();
@@ -126,6 +140,17 @@ export default class Router {
 
     // Execute the route's middleware, then finally the handler.
     return this.executeRouteMiddleware(match, context, 0);
+  }
+
+  /**
+   * Create a tree for a specific HTTP method.
+   *
+   * @param method The HTTP method to create tree for.
+   */
+  private createTreeForMethod(method: HttpMethod) {
+    if (!this.trees.has(method)) {
+      this.trees.set(method, new Tree());
+    }
   }
 
   /**
