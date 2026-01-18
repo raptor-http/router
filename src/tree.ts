@@ -53,7 +53,7 @@ export default class Tree {
     node.handler = route.options.handler;
 
     node.middleware = this.normaliseMiddleware(
-      route.options.middleware
+      route.options.middleware,
     );
   }
 
@@ -98,7 +98,7 @@ export default class Tree {
         return {
           handler: wildcard.handler,
           middleware: wildcard.middleware,
-          params
+          params,
         };
       }
 
@@ -119,12 +119,18 @@ export default class Tree {
 
   /**
    * Normalise middleware by converting to an array regardless.
-   * 
+   *
    * @param middleware One or more middleware.
    *
    * @returns An array of defined middleware.
    */
-  private normaliseMiddleware(middleware?: Middleware | Middleware[]): Middleware[] | undefined {
-    return !middleware ? [] : Array.isArray(middleware) ? middleware : [middleware];
+  private normaliseMiddleware(
+    middleware?: Middleware | Middleware[],
+  ): Middleware[] | undefined {
+    return !middleware
+      ? []
+      : Array.isArray(middleware)
+      ? middleware
+      : [middleware];
   }
 }
