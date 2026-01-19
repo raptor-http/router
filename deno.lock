@@ -1,13 +1,13 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@raptor/framework@~0.14.6": "0.14.6",
+    "jsr:@raptor/framework@0.15": "0.15.0",
     "jsr:@std/assert@^1.0.16": "1.0.16",
     "jsr:@std/internal@^1.0.12": "1.0.12"
   },
   "jsr": {
-    "@raptor/framework@0.14.6": {
-      "integrity": "3bad242840f6d0981d09caa44ee697ec6d654698c29442b50e93373722d9b8e9"
+    "@raptor/framework@0.15.0": {
+      "integrity": "0432263fa3f5465ec68694d59959fec7f1d9208deb6a57013951da7f57649a7e"
     },
     "@std/assert@1.0.16": {
       "integrity": "6a7272ed1eaa77defe76e5ff63ca705d9c495077e2d5fd0126d2b53fc5bd6532",
@@ -21,7 +21,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@raptor/framework@~0.14.6",
+      "jsr:@raptor/framework@0.15",
       "jsr:@std/assert@^1.0.16"
     ]
   }
