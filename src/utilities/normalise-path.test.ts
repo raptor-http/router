@@ -1,5 +1,6 @@
 import { assertEquals } from "@std/assert";
-import normalisePath from "../src/utilities/normalise-path.ts";
+
+import normalisePath from "./normalise-path.ts";
 
 Deno.test("test normalise paths removes trailing slash", () => {
   const path = "/api/resource/name/";

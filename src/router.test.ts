@@ -1,9 +1,10 @@
-import Route from "../src/route.ts";
-import Router from "../src/router.ts";
 import { assertEquals } from "@std/assert";
-import RouteGroup from "../src/route-group.ts";
 import { type Context, Kernel } from "@raptor/framework";
-import { HttpMethod } from "../src/enums/http-method.ts";
+
+import Route from "./route.ts";
+import Router from "./router.ts";
+import RouteGroup from "./route-group.ts";
+import { HttpMethod } from "./enums/http-method.ts";
 
 const APP_URL = "http://localhost:8000";
 
