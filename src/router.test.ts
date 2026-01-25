@@ -21,7 +21,7 @@ Deno.test("test router accepts new route", async () => {
 
   router.add(route);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(`${APP_URL}/test-route`),
@@ -51,7 +51,7 @@ Deno.test("test router accepts new routes", async () => {
 
   router.add([routeOne, routeTwo]);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response1 = await kernel.respond(
     new Request(`${APP_URL}/test-route-1`),
@@ -83,7 +83,7 @@ Deno.test("test route influences context response", async () => {
 
   router.add(route);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(
@@ -114,7 +114,7 @@ Deno.test("test unknown route throws not found", async () => {
 
   router.add(route);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(
@@ -145,7 +145,7 @@ Deno.test("test context contains route params", async () => {
 
   router.add(route);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(
@@ -169,7 +169,7 @@ Deno.test("test static route lookup performance", async () => {
 
   router.add(staticRoute);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(`${APP_URL}/static`),
@@ -194,7 +194,7 @@ Deno.test("test dynamic route with params", async () => {
 
   router.add(dynamicRoute);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(`${APP_URL}/users/123/posts/456`),
@@ -224,7 +224,7 @@ Deno.test("test route with multiple HTTP methods", async () => {
 
   router.add(route);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const getResponse = await kernel.respond(
     new Request(`${APP_URL}/api/resource`, { method: "GET" }),
@@ -257,7 +257,7 @@ Deno.test("test wildcard route", async () => {
   });
 
   router.add(route);
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(`${APP_URL}/wildcard/hello`),
@@ -286,7 +286,7 @@ Deno.test("test route middleware", async () => {
 
   router.add(route);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(`${APP_URL}/test`),
@@ -315,7 +315,7 @@ Deno.test("test route group without middleware", async () => {
 
   router.add(group);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(`${APP_URL}/api`),
@@ -349,7 +349,7 @@ Deno.test("test route group with one middleware", async () => {
 
   router.add(group);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(`${APP_URL}/api`),
@@ -390,7 +390,7 @@ Deno.test("test route group with multiple middleware", async () => {
 
   router.add(group);
 
-  kernel.add((context: Context) => router.handle(context));
+  kernel.add(router.handle);
 
   const response = await kernel.respond(
     new Request(`${APP_URL}/api`),
