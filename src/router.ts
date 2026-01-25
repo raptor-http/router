@@ -1,4 +1,4 @@
-import { type Context, NotFound } from "@raptor/framework";
+import { type Context, type Middleware, NotFound } from "@raptor/framework";
 
 import Tree from "./tree.ts";
 import type Route from "./route.ts";
@@ -114,13 +114,24 @@ export default class Router {
   }
 
   /**
+   * Wrapper to pre-bind this to the router handler method.
+   */
+  public get handle(): Middleware {
+    return (context: Context, next: CallableFunction) => {
+      return this.handleRouting(context, next);
+    };
+  }
+
+  /**
    * Handle the current http context and process routes.
    *
    * @param context The current http context.
+   * @param next The next middleware function.
+   *
    * @returns An unknown data type.
    * @throws {NotFound | TypeError}
    */
-  public handle(context: Context): Promise<unknown> {
+  public handleRouting(context: Context, _next: CallableFunction): Promise<unknown> {
     const { request } = context;
 
     const { method } = request;
