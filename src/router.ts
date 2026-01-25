@@ -131,7 +131,10 @@ export default class Router {
    * @returns An unknown data type.
    * @throws {NotFound | TypeError}
    */
-  public handleRouting(context: Context, _next: CallableFunction): Promise<unknown> {
+  public handleRouting(
+    context: Context,
+    _next: CallableFunction,
+  ): Promise<unknown> {
     const { request } = context;
 
     const { method } = request;
